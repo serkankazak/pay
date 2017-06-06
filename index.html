@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Pay</title>
+</head><body><table align="center">
+<tr><td><textarea rows="10" cols="30" id="t1">wei 15
+nac 10
+</textarea></td></tr>
+<tr><td><textarea rows="10" cols="30" id="t2">sch 20
+nac 10
+</textarea></td></tr>
+</table><div align="center"></div><br><input style="width:100%" type="button" value="Go" onclick="go()"><script>
+
+var err = "";
+var urlq = "";
+
+function go2(id) {
+
+	var tot = 0;
+
+	var clines = $("#t" + id).val().replace(/[ \t]+/g, " ").split("\n");
+
+	for (var i = 0; i < clines.length; i++) {
+		
+		var cline = clines[i].replace(/^[ \t]+/, "").replace(/[ \t]+$/, "");
+		
+		if (cline.length > 0) {
+			
+			var pis = cline.split(" ");
+		
+			var er = 0;
+			if (pis.length != 2) { er = 1; }
+			else if (pis[0].match(/[a-zA-Z0-9]+/) != pis[0]) { er = 1; }
+			else if (pis[1].match(/[0-9.]+/) != pis[1]) { er = 1; }
+	
+			if (er) { err += "<br>e: " + cline; } else {
+				tot += parseFloat(pis[1]);
+			}
+			
+		}
+		
+	}
+
+	err += "<br><span style='color:red'>" + id + " pays: " + tot + "</span>";
+
+	var qgo = $("#t" + id).val().replace(/[ \t]+/g, " ").replace(/[^a-zA-Z0-9.\n ]+/g, "").replace(/ /g, "_").replace(/\n/g, "|");
+	if (id == 1) { urlq = "?q=" + qgo; } else { urlq += "," + qgo}
+
+}
+
+function go() {
+	err = "";
+	go2(1);
+	go2(2);
+	$("div").html(err);
+	if (document.location.search != urlq) { document.location.search = urlq; }
+}
+
+$("#t1").val(document.location.search.split("=")[1].split(",")[0].replace(/[|]/g, "\n").replace(/_/g, " "));
+$("#t2").val(document.location.search.split("=")[1].split(",")[1].replace(/[|]/g, "\n").replace(/_/g, " "));
+
+go2(1);
+go2(2);
+$("div").html(err);
+
+</script></body></html>
