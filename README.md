@@ -1,3 +1,3 @@
 # pay
 
-https://insanevladi.github.io/pay
+https://serkankazak.github.io/pay
